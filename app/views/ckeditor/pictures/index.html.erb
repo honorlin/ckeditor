@@ -1,4 +1,20 @@
-<div id="fileupload" class="gal-holder">
+
+<hr>
+<div class="menu">
+ <%= link_to "依日期新到舊排序", params.merge({desc: 1}) %>
+ <%= link_to "依日期舊到新排序", params.merge({desc: 0}) %>
+</div>
+<%= form_tag(params, {:method => :get}) do %>
+<%= label_tag '請輸入查詢檔名' %>
+<%= text_field_tag 'query', nil, placeholder: 'ex: broadway' %>
+<%= label_tag '請選擇查詢日期' %>
+<%= text_field_tag 'date' %>
+<%= hidden_field_tag 'CKEditor', params[:CKEditor] %>
+<%= hidden_field_tag 'CKEditorFuncNum', params[:CKEditorFuncNum] %>
+<%= hidden_field_tag 'langCode', params[:langCode] %>
+<%= submit_tag '送出查詢' %>
+<% end %>
+<hr><div id="fileupload" class="gal-holder">
   <div class="gal-item">
     <div class="fileupload-button gal-upload-holder">
   		<%= link_to I18n.t(:upload, :scope => [:ckeditor, :buttons]), 'javascript:void(0)', :class => "add" %>
@@ -11,11 +27,16 @@
 
   <% unless @pictures.last_page? %>
     <div class="pagination">
-      <%= link_to I18n.t("ckeditor.buttons.next"), ckeditor.pictures_path(params.merge(:page => @pictures.next_page)), :class => "next", :rel => "next" %>
+      <%= link_to I18n.t("ckeditor.buttons.next"), params.merge(:page => @pictures.next_page), :class => "next", :rel => "next" %>
     </div>
   <% end -%>
 
   <script type="text/javascript">
     <%= Ckeditor::Utils.js_fileuploader('image') %>
+  </script>
+  
+  <script type="text/javascript">
+    $( ".menu" ).buttonset();
+    $('input[name=date]').datepicker({dateFormat : 'yy-mm-dd'});
   </script>
 </div>
