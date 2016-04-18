@@ -2,7 +2,14 @@ class Ckeditor::PicturesController < Ckeditor::ApplicationController
   skip_before_filter :verify_authenticity_token, only: :create
 
   def index
-    @pictures = Ckeditor.picture_adapter.find_all(ckeditor_pictures_scope)
+    order_query = { :order => [:created_at, :desc] }
+    order_query = { :order => [:created_at, :asc] } if params[:desc] == "0"
+    params.delete :query if params[:desc].present?
+    params.delete :date if params[:desc].present?
+    params.delete :commit if params[:commit].present?
+    @pictures = Ckeditor.picture_adapter.find_all(order_query)
+    @pictures = @pictures.where("data_file_name LIKE ?", "%#{params[:query]}%") if params[:query].present?
+    @pictures = @pictures.where("created_at <= ?", params[:date]) if params[:date].present?
     @pictures = Ckeditor::Paginatable.new(@pictures).page(params[:page])
 
     respond_to do |format|
