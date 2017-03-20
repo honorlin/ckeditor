@@ -28,7 +28,7 @@ module Ckeditor
           end
 
           def url_thumb
-            url_content
+            url
           end
 
           def as_json_methods
