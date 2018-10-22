@@ -1,42 +1,133 @@
 
-<hr>
-<div class="menu">
- <%= link_to "依日期新到舊排序", params.merge({desc: 1}) %>
- <%= link_to "依日期舊到新排序", params.merge({desc: 0}) %>
-</div>
-<%= form_tag(params, {:method => :get}) do %>
-<%= label_tag '請輸入查詢檔名' %>
-<%= text_field_tag 'query', nil, placeholder: 'ex: broadway' %>
-<%= label_tag '請選擇查詢日期' %>
-<%= text_field_tag 'date' %>
-<%= hidden_field_tag 'CKEditor', params[:CKEditor] %>
-<%= hidden_field_tag 'CKEditorFuncNum', params[:CKEditorFuncNum] %>
-<%= hidden_field_tag 'langCode', params[:langCode] %>
-<%= submit_tag '送出查詢' %>
-<% end %>
-<hr><div id="fileupload" class="gal-holder">
-  <div class="gal-item">
-    <div class="fileupload-button gal-upload-holder">
-  		<%= link_to I18n.t(:upload, :scope => [:ckeditor, :buttons]), 'javascript:void(0)', :class => "add" %>
-		</div>
-	</div>
+<!DOCTYPE html>
+<html lang="zh_TW">
+    <head>
+        <meta charset="utf-8" />
+        <title>GREATSTORE</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="">
 
-  <div class="fileupload-list" data-endless="true">
-    <%= render :partial => 'ckeditor/shared/asset', :collection => @pictures.scoped %>
-  </div>
+        <%= stylesheet_link_tag 'admin', media: 'all', 'data-turbolinks-track' => true %>
+        <%= csrf_meta_tag %>
+    </head>
 
-  <% unless @pictures.last_page? %>
-    <div class="pagination">
-      <%= link_to I18n.t("ckeditor.buttons.next"), params.merge(:page => @pictures.next_page), :class => "next", :rel => "next" %>
-    </div>
-  <% end -%>
+     <body>
 
-  <script type="text/javascript">
-    <%= Ckeditor::Utils.js_fileuploader('image') %>
-  </script>
-  
-  <script type="text/javascript">
-    $( ".menu" ).buttonset();
-    $('input[name=date]').datepicker({dateFormat : 'yy-mm-dd'});
-  </script>
-</div>
+        <!-- Begin page -->
+        <div class="wrapper">
+
+            <div class="content-page">
+                <div class="content">
+                  <%= form_tag(params, {:method => :get}) do %>  
+                    <%= hidden_field_tag 'CKEditor', params[:CKEditor] %>
+                    <%= hidden_field_tag 'CKEditorFuncNum', params[:CKEditorFuncNum] %>
+                    <%= hidden_field_tag 'langCode', params[:langCode] %>
+                    <!-- Topbar Start -->
+                    <div class="navbar-custom">
+        
+                        <button class="button-menu-mobile open-left disable-btn">
+                            <i class="mdi mdi-menu"></i>
+                        </button>
+                        <div class="app-search">
+                          <div class="input-group">
+                              <%= text_field_tag 'query', nil, class: "form-control", placeholder: 'Search...' %>
+                              <span class="mdi mdi-magnify"></span>
+                              <div class="input-group-append">
+                                  <button class="btn btn-primary" type="submit">Search</button>
+                              </div>
+                             
+                          </div>                          
+                        </div>
+                    </div>
+                    <div class="navbar-custom">
+                        <div class="input-group">
+                          <%= link_to "最新", params.merge({sort: "desc"}), class: "btn btn-primary" %> 
+                          <%= link_to "最舊", params.merge({sort: "asc"}), class: "btn btn-primary" %>
+                          <%= text_field_tag 'date', nil, class: "form-control", placeholder: '時間搜尋...'  %>
+                          <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">確定</button>
+                          </div>
+                        </div> 
+                    </div>
+                    <!-- end Topbar -->
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                         
+                          
+                         
+                                            
+                        <div id="fileupload" class="gal-holder">
+                          <div class="gal-item">
+                            <div class="fileupload-button gal-upload-holder">
+                              <%= link_to I18n.t(:upload, :scope => [:ckeditor, :buttons]), 'javascript:void(0)', :class => "add" %>
+                            </div>
+                          </div>
+
+                          <div class="fileupload-list" data-endless="true">
+                            <%= render :partial => 'ckeditor/shared/asset', :collection => @pictures.scoped %>
+                          </div>
+
+                          <% unless @pictures.last_page? %>
+                            <div class="pagination">
+                              <%= link_to I18n.t("ckeditor.buttons.next"), params.merge(:page => @pictures.next_page), :class => "next", :rel => "next" %>
+                            </div>
+                          <% end -%>
+
+                          <script type="text/javascript">
+                            <%= Ckeditor::Utils.js_fileuploader('image') %>
+                          </script>
+
+                          <script type="text/javascript">
+                            $( ".menu" ).buttonset();
+                            $('input[name=date]').datepicker({dateFormat : 'yy-mm-dd'});
+                          </script>
+                          </div>
+
+
+                        </div>
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+                   <% end %>  
+                </div> <!-- content -->
+
+                <!-- Footer Start -->
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                2018 © GREATSTORE - www.greatstore.com - Photo Management
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-md-right footer-links d-none d-md-block">
+                                    <a href="javascript: void(0);">About</a>
+                                    <a href="javascript: void(0);">Support</a>
+                                    <a href="javascript: void(0);">Contact Us</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                <!-- end Footer -->
+
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+        </div>
+        <!-- END wrapper -->
+
+     
+        <%= javascript_include_tag 'admin', 'data-turbolinks-track' => true %>
+    </body>
+</html>

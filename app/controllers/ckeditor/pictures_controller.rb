@@ -2,12 +2,18 @@ class Ckeditor::PicturesController < Ckeditor::ApplicationController
   skip_before_filter :verify_authenticity_token, only: :create
 
   def index
-    order_query = { :order => [:created_at, :desc] }
-    order_query = { :order => [:created_at, :asc] } if params[:desc] == "0"
-    order_query = { website_id: @website.id}
-    params.delete :query if params[:desc].present?
-    params.delete :date if params[:desc].present?
-    params.delete :commit if params[:commit].present?
+    order_query = {}
+    if params["sort"].present?
+     order_query.merge!(order: { created_at: params["sort"].to_sym })
+    else
+     order_query.merge!(order: { created_at: :desc })
+    end
+  
+
+    order_query.merge!({ website_id: @website.id }) if @website.present?
+    # params.delete :query if params[:desc].present?
+    # params.delete :date if params[:desc].present?
+    # params.delete :commit if params[:commit].present?
     @pictures = Ckeditor.picture_adapter.find_all(order_query)
     @pictures = @pictures.where("data_file_name LIKE ?", "%#{params[:query]}%") if params[:query].present?
     @pictures = @pictures.where("created_at <= ?", params[:date]) if params[:date].present?
