@@ -23,6 +23,9 @@
 
   <div class="fileupload-list" data-endless="true">
     <%= render :partial => 'ckeditor/shared/asset', :collection => @pictures.scoped %>
+    <% if params[:CKEditor]=='no_iframe' %>
+      <input multiple="multiple" type="file" name="file" style="position: absolute; right: 0px; top: 0px; font-family: Arial; font-size: 118px; margin: 0px; padding: 0px; cursor: pointer; opacity: 0;">
+    <% end %>
   </div>
 
   <% unless @pictures.last_page? %>
@@ -32,9 +35,13 @@
   <% end -%>
 
   <script type="text/javascript">
-    <%= Ckeditor::Utils.js_fileuploader('image') %>
+    <% unless params[:CKEditor]=='no_iframe' %>
+      <%= Ckeditor::Utils.js_fileuploader('image') %>
+    <% else %>
+      (function() { new qq.FileUploaderInput({"multiple":true,"element":"fileupload","action":"/admin/ckeditor/pictures","allowedExtensions":["jpg","jpeg","png","gif","tiff"]}); }).call(this);
+    <% end %>
   </script>
-  
+
   <script type="text/javascript">
     $( ".menu" ).buttonset();
     $('input[name=date]').datepicker({dateFormat : 'yy-mm-dd'});
