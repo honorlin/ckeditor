@@ -19,6 +19,7 @@ class Ckeditor::PicturesController < Ckeditor::ApplicationController
   end
 
   def create
+    @picture = Ckeditor.picture_model.new
     @picture = Ckeditor.picture_model.new(website_id: @website.id) if @website.present?
     respond_with_asset(@picture)
   end
