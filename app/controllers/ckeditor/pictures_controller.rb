@@ -4,7 +4,7 @@ class Ckeditor::PicturesController < Ckeditor::ApplicationController
   def index
     order_query = { :order => [:created_at, :desc] }
     order_query = { :order => [:created_at, :asc] } if params[:desc] == "0"
-    order_query = { website_id: @website.id}
+    order_query = { website_id: @website.id} if @website.present?
     params.delete :query if params[:desc].present?
     params.delete :date if params[:desc].present?
     params.delete :commit if params[:commit].present?
@@ -19,7 +19,8 @@ class Ckeditor::PicturesController < Ckeditor::ApplicationController
   end
 
   def create
-    @picture = Ckeditor.picture_model.new(website_id: @website.id)
+    @picture = Ckeditor.picture_model.new
+    @picture = Ckeditor.picture_model.new(website_id: @website.id) if @website.present?
     respond_with_asset(@picture)
   end
 
